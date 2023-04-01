@@ -2,13 +2,11 @@
 #include "iostream"
 #include <stdexcept>
 
-template <typename T> Poly<T>::Poly() : _elem{0} {}
-
 template <typename T>
 Poly<T>::Poly(std ::initializer_list<T> list) : _elem{list} {
-  
+
   // delete trailing 0s
-  while (_elem.size() > 0 && _elem.back() == 0)
+  while (_elem.size() >= 0 && _elem.back() == 0)
     _elem.pop_back();
 }
 
@@ -17,7 +15,7 @@ Poly<T> &Poly<T>::operator=(std ::initializer_list<T> list) {
   _elem = list;
 
   // delete trailing 0s
-  while (_elem.size() > 0 && _elem.back() == 0)
+  while (_elem.size() >= 0 && _elem.back() == 0)
     _elem.pop_back();
   return *this;
 }
@@ -34,6 +32,7 @@ template <typename T> Poly<T> Poly<T>::operator+(Poly<T> const &b) {
   Poly sum;
   sum._elem = std ::vector<T>(std ::max(degree(), b.degree()) + 1);
   int i{0};
+
   while (i <= degree() && i <= b.degree()) {
     sum._elem[i] = _elem[i] + b._elem[i];
     i++;
@@ -50,7 +49,7 @@ template <typename T> Poly<T> Poly<T>::operator+(Poly<T> const &b) {
   }
 
   // delete trailing 0s
-  while (sum._elem.size() > 0 && sum._elem.back() == 0)
+  while (sum._elem.size() >= 0 && sum._elem.back() == 0)
     sum._elem.pop_back();
 
   return sum;
@@ -60,6 +59,7 @@ template <typename T> Poly<T> Poly<T>::operator-(Poly<T> const &b) {
   Poly diff;
   diff._elem = std ::vector<T>(std ::max(degree(), b.degree()) + 1);
   int i{0};
+
   while (i <= degree() && i <= b.degree()) {
     diff._elem[i] = _elem[i] - b._elem[i];
     i++;
@@ -76,11 +76,17 @@ template <typename T> Poly<T> Poly<T>::operator-(Poly<T> const &b) {
   }
 
   // delete trailing 0s
-  while (diff._elem.size() > 0 && diff._elem.back() == 0)
+  while (diff._elem.size() >= 0 && diff._elem.back() == 0)
     diff._elem.pop_back();
 
   return diff;
 }
+
+// implementation of multiplication between two polinomyals using convolution
+// product
+// template <typename T> Poly<T> Poly<T>::operator*(Poly<T> const &b) {}
+
+/*** actual implementations for the linker ***/
 template class Poly<float>;
 template class Poly<double>;
 template class Poly<int>;

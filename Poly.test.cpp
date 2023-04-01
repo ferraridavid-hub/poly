@@ -11,8 +11,7 @@ TEST_CASE("Testing Poly.hpp") {
   CHECK(p[2] == 3);
 
   Poly<double> p2;
-  CHECK(p2.degree() == 0);
-  CHECK(p2[0] == 0);
+  CHECK(p2.degree() == NULL_POLY_DEG);
   CHECK_THROWS(p2[3]);
 
   auto p3{p};
@@ -47,4 +46,9 @@ TEST_CASE("Testing Poly.hpp") {
   CHECK(p11[1] == 2);
   CHECK(p11[2] == 3);
   CHECK_THROWS(p11[3]);
+
+  Poly<int> p0;
+  auto p12 {p0 + p9};
+  CHECK(p12.degree() == p9.degree());
+  CHECK(p0.degree() == NULL_POLY_DEG);
 }
