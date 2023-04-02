@@ -2,11 +2,13 @@
 #include "iostream"
 #include <stdexcept>
 
+template <typename T> Poly<T>::Poly() : _elem{0} {}
+
 template <typename T>
 Poly<T>::Poly(std ::initializer_list<T> list) : _elem{list} {
 
   // delete trailing 0s
-  while (_elem.size() >= 0 && _elem.back() == 0)
+  while (_elem.size() > 1 && _elem.back() == 0)
     _elem.pop_back();
 }
 
@@ -15,12 +17,16 @@ Poly<T> &Poly<T>::operator=(std ::initializer_list<T> list) {
   _elem = list;
 
   // delete trailing 0s
-  while (_elem.size() >= 0 && _elem.back() == 0)
+  while (_elem.size() > 1 && _elem.back() == 0)
     _elem.pop_back();
   return *this;
 }
 
-template <typename T> int Poly<T>::degree() const { return _elem.size() - 1; }
+template <typename T> int Poly<T>::degree() const {
+  if (_elem.size() == 1 && _elem.back() == 0)
+    return NULL_POLY_DEG;
+  return _elem.size() - 1;
+}
 
 template <typename T> const T &Poly<T>::operator[](int i) const {
   if (i < 0 || (size_t)i >= _elem.size())
@@ -48,9 +54,8 @@ template <typename T> Poly<T> Poly<T>::operator+(Poly<T> const &b) {
     i++;
   }
 
-  // delete trailing 0s
-  while (sum._elem.size() >= 0 && sum._elem.back() == 0)
-    sum._elem.pop_back();
+  // delete trailing 0
+  sum.aling_coef();
 
   return sum;
 }
@@ -75,16 +80,51 @@ template <typename T> Poly<T> Poly<T>::operator-(Poly<T> const &b) {
     i++;
   }
 
-  // delete trailing 0s
-  while (diff._elem.size() >= 0 && diff._elem.back() == 0)
-    diff._elem.pop_back();
+  // delete trailing 0
+  diff.aling_coef();
 
   return diff;
 }
 
 // implementation of multiplication between two polinomyals using convolution
-// product
-// template <typename T> Poly<T> Poly<T>::operator*(Poly<T> const &b) {}
+// product between {this}_n and {b}_n coefficients sequences
+template <typename T> Poly<T> Poly<T>::operator*(Poly<T> const &b) {
+  if (degree() == NULL_POLY_DEG || b.degree() == NULL_POLY_DEG)
+    return Poly{};
+  Poly mult;
+  int mdeg = degree() + b.degree();
+  mult._elem = std ::vector<T>(mdeg + 1);
+
+  // convolution product
+  for (int i = 0; i <= mdeg; i++) {
+    auto c{0};
+    for (int j = 0; j <= i; j++) {
+      auto p = (j <= degree()) ? _elem[j] : 0;
+      auto q = (i - j <= b.degree()) ? b._elem[i - j] : 0;
+      c += p * q;
+    }
+    mult._elem[i] = c;
+  }
+
+  // delete trailing 0
+  mult.aling_coef();
+
+  return mult;
+}
+
+template <typename T> Poly<T> Poly<T>::operator*(T const &alpha) {
+  Poly scaled{*this};
+  for (auto &x : scaled._elem)
+    x *= alpha;
+  return scaled;
+}
+
+// align_coef: util function for removing trailing 0 from the coefficients
+// vector
+template <typename T> void Poly<T>::aling_coef() {
+  while (_elem.size() > 1 && _elem.back() == 0)
+    _elem.pop_back();
+}
 
 /*** actual implementations for the linker ***/
 template class Poly<float>;

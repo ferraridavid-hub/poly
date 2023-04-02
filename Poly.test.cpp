@@ -48,7 +48,55 @@ TEST_CASE("Testing Poly.hpp") {
   CHECK_THROWS(p11[3]);
 
   Poly<int> p0;
-  auto p12 {p0 + p9};
+  auto p12{p0 + p9};
   CHECK(p12.degree() == p9.degree());
   CHECK(p0.degree() == NULL_POLY_DEG);
+
+  // (1 + x)(1 + x^2) = 1 + x^2 + x + x^3 =
+  Poly<int> pp0{1, 1};
+  Poly<int> pp1{1, 0, 1};
+  Poly<int> pp2{pp0 * pp1};
+  CHECK(pp2.degree() == 3);
+  CHECK(pp2[0] == 1);
+  CHECK(pp2[1] == 1);
+  CHECK(pp2[2] == 1);
+  CHECK(pp2[3] == 1);
+
+  pp2 = p0 * pp1;
+  CHECK(pp2.degree() == NULL_POLY_DEG);
+
+  // (3 + x + 2x^2)(2)
+  Poly<double> pp4{3, 1, 2};
+  Poly<double> pp5{2};
+  auto pp6{pp5 * pp4};
+  CHECK(pp6.degree() == 2);
+  CHECK(pp6[0] == 6);
+  CHECK(pp6[1] == 2);
+  CHECK(pp6[2] == 4);
+
+  Poly<int> i4{4};
+  Poly<int> i6{6};
+  CHECK((i4 * i6).degree() == 0);
+  CHECK((i4 * i6)[0] == 24);
+
+  Poly<double> mp0{1, 2, 1, 2};
+  mp0 = mp0 * 3;
+  CHECK(mp0.degree() == 3);
+  CHECK(mp0[0] == 3);
+  CHECK(mp0[1] == 6);
+  CHECK(mp0[2] == 3);
+  CHECK(mp0[3] == 6);
+
+  Poly<double> mp1{5.0 * mp0};
+  CHECK(mp1.degree() == 3);
+  CHECK(mp1[0] == 15);
+  CHECK(mp1[1] == 30);
+  CHECK(mp1[2] == 15);
+  CHECK(mp1[3] == 30);
+
+  std :: vector<Poly<int>> pv {{1, 1}, {2, 2}, {2, 3, 0}};
+  for (auto p : pv) {
+    std :: cout << p;
+  }
+
 }
