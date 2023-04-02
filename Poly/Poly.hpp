@@ -33,6 +33,7 @@ public:
   Poly &operator=(std ::initializer_list<T>); // assign a polynomial build from
                                               // a brace-enclosed list
 
+  Poly(std ::vector<T> const &);
   /*** access methods ***/
   int degree() const;               // polynomial's degree
   const T &operator[](int i) const; // access i-th coefficient of the polynomial
@@ -42,7 +43,10 @@ public:
   Poly operator-(Poly const &);
   Poly operator*(Poly const &);
   Poly operator*(T const &);
-  friend Poly<T> operator*(T alpha, Poly<T> const &p) {
+  // this function is defined here to fix the g++ warning: friend define a non
+  // template function ...
+  template <typename U>
+  friend Poly<T> operator*(U alpha, Poly<T> const &p) {
     Poly scaled{p};
     for (auto &x : scaled._elem)
       x *= alpha;
@@ -50,6 +54,8 @@ public:
   }
 
   /*** output ***/
+  // this function is defined here to fix the g++ warning: friend define a non
+  // template function ...
   friend std ::ostream &operator<<(std ::ostream &o, Poly<T> const &p) {
     for (size_t i = 0; i < p._elem.size(); i++) {
       o << std ::setw(15) << p._elem[i];
@@ -66,5 +72,10 @@ private:
   std ::vector<T> _elem{}; // coefficients of the polynomial
   void aling_coef();
 };
+
+/*** Instantiate parametrized template classes, implementation resides on .cpp side. ***/
+template class Poly<float>;
+template class Poly<double>;
+template class Poly<int>;
 
 #endif

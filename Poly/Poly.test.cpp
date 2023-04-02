@@ -87,16 +87,24 @@ TEST_CASE("Testing Poly.hpp") {
   CHECK(mp0[2] == 3);
   CHECK(mp0[3] == 6);
 
-  Poly<double> mp1{5.0 * mp0};
+  Poly<double> mp1{5 * mp0};
   CHECK(mp1.degree() == 3);
   CHECK(mp1[0] == 15);
   CHECK(mp1[1] == 30);
   CHECK(mp1[2] == 15);
   CHECK(mp1[3] == 30);
 
-  std :: vector<Poly<int>> pv {{1, 1}, {2, 2}, {2, 3, 0}};
+  std ::vector<Poly<int>> pv{
+      {1, 1}, {2, 2, 32}, {2, 3, 0, 23}, {}, {0, 0, 0, 0}};
   for (auto p : pv) {
-    std :: cout << p;
+    std ::cout << p;
   }
+  CHECK(pv[3].degree() == pv[4].degree());
+
+  std ::vector<int> v{1, 0, 2, 3, 4};
+  Poly<int> ppv{v};
+  CHECK(ppv.degree() == 4);
+  CHECK(ppv[4] == 4);
+  std :: cout << ppv;
 
 }

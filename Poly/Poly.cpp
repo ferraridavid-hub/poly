@@ -22,6 +22,11 @@ Poly<T> &Poly<T>::operator=(std ::initializer_list<T> list) {
   return *this;
 }
 
+template <typename T> Poly<T>::Poly(std ::vector<T> const &v) : _elem{v} {
+  while (_elem.size() > 1 && _elem.back() == 0)
+    _elem.pop_back();
+}
+
 template <typename T> int Poly<T>::degree() const {
   if (_elem.size() == 1 && _elem.back() == 0)
     return NULL_POLY_DEG;
@@ -125,8 +130,3 @@ template <typename T> void Poly<T>::aling_coef() {
   while (_elem.size() > 1 && _elem.back() == 0)
     _elem.pop_back();
 }
-
-/*** actual implementations for the linker ***/
-template class Poly<float>;
-template class Poly<double>;
-template class Poly<int>;

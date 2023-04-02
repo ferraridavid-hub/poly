@@ -1,1 +1,4 @@
 test
+.vscode
+doctest.h
+test.cpp
