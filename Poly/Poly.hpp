@@ -55,7 +55,9 @@ public:
   }
 
   /*** Analysis ***/
+  // collection of analytics operations
   T operator()(T);
+  Poly operator>>(int); // operator >> is used for derivation
 
   /*** output ***/
   // this function is defined here to fix the g++ warning: friend define a non
@@ -76,6 +78,10 @@ private:
   std ::vector<T> _elem{}; // coefficients of the polynomial
   void aling_coef();
 };
+
+/*******************************/
+/******* IMPLEMENTATION ********/
+/*******************************/
 
 template <typename T> Poly<T>::Poly() : _elem{0} {}
 
@@ -208,6 +214,23 @@ template <typename T> T Poly<T>::operator()(T x) {
   return sum;
 }
 
+template <typename T> Poly<T> Poly<T>::operator>>(int n) {
+  if (n == 0)
+    return *this;
+  if (n == 1) {
+    Poly d{*this};
+    for (int i = 0; i <= degree(); i++) {
+      if (i == degree())
+        d._elem[i] = 0;
+      else {
+        d._elem[i] = d._elem[i+1] * (i + 1);
+      }
+    }
+    d.aling_coef();
+    return d;
+  }
+  return ((operator>>(1)).operator>>(n - 1));
+}
 // align_coef: util function for removing trailing 0 from the coefficients
 // vector
 template <typename T> void Poly<T>::aling_coef() {
