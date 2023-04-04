@@ -107,4 +107,7 @@ TEST_CASE("Testing Poly.hpp") {
   CHECK(ppv[4] == 4);
   std :: cout << ppv;
 
+  CHECK(ppv(0) == 1);
+  CHECK(ppv(2) == 97);
+
 }

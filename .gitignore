@@ -1,4 +1,5 @@
 test
 .vscode
 doctest.h
+a.out
 test.cpp
