@@ -183,7 +183,7 @@ template <typename T> Poly<T> Poly<T>::operator*(Poly<T> const &b) {
 
   // convolution product
   for (int i = 0; i <= mdeg; i++) {
-    auto c{0};
+    auto c{T{}};
     for (int j = 0; j <= i; j++) {
       auto p = (j <= degree()) ? _elem[j] : 0;
       auto q = (i - j <= b.degree()) ? b._elem[i - j] : 0;
